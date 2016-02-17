@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [0.1.1] - 2016-01-17
+## [0.1.2] - 2016-01-17
 ### Fixed
 - Make WPCS a dev-only requirement in composer.
 
