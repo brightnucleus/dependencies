@@ -8,6 +8,6 @@
     <arg name="report" value="summary"/>
     <arg name="report" value="source"/>
     <arg value="sap"/>
-    <rule ref="PSR2">
+    <rule ref="WordPress">
     </rule>
 </ruleset>

@@ -14,7 +14,7 @@ projectname="${PWD##*/}"
 
 # The code standard to use.
 # TODO: Figure out how to include WPCS using Composer.
-codestandard='Squiz'
+codestandard='WordPress'
 
 echo
 echo -e "  + Starting unit tests for \033[1;33m${projectname}\033[1;0m..."
