@@ -37,10 +37,9 @@ class DependencyManager implements DependencyManagerInterface {
 	/*
 	 * Names of the configuration keys.
 	 */
-	const KEY_DEPENDENCY_SUBTREE = 'BrightNucleus\Dependencies';
-	const KEY_HANDLERS           = 'handlers';
-	const KEY_SCRIPTS            = 'scripts';
-	const KEY_STYLES             = 'styles';
+	const KEY_HANDLERS = 'handlers';
+	const KEY_SCRIPTS  = 'scripts';
+	const KEY_STYLES   = 'styles';
 
 	/**
 	 * Hold the dependencies, grouped by type.
@@ -67,17 +66,12 @@ class DependencyManager implements DependencyManagerInterface {
 	 *
 	 * @param ConfigInterface $config         ConfigInterface object that
 	 *                                        contains dependency settings.
-	 * @param string          $config_key     Optional. Key of a configuration
-	 *                                        subtree.
 	 * @throws RuntimeException If the config could not be processed.
 	 * @throws InvalidArgumentException If no dependency handlers were
 	 *                                        specified.
 	 */
-	public function __construct( ConfigInterface $config, $config_key = null ) {
-		$this->processConfig(
-			$config,
-			$config_key ?: self::KEY_DEPENDENCY_SUBTREE
-		);
+	public function __construct( ConfigInterface $config ) {
+		$this->processConfig( $config );
 		$this->init_handlers();
 		$this->init_dependencies();
 	}
