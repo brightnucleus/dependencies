@@ -3,7 +3,8 @@
 	"description": "Config-driven WordPress dependencies.",
 	"require-dev": {
 		"phpunit/phpunit": "~4",
-		"squizlabs/php_codesniffer": "~2.5"
+		"squizlabs/php_codesniffer": "~2.5",
+		"wp-coding-standards/wpcs": "dev-master"
 	},
 	"license": "GPL-2.0+",
 	"authors": [
@@ -17,8 +18,7 @@
 		"brightnucleus/config": "0.1.*",
 		"brightnucleus/exceptions": "0.1.*",
 		"brightnucleus/invoker": "0.1.*",
-		"brightnucleus/contracts": "0.1.*",
-		"wp-coding-standards/wpcs": "dev-master"
+		"brightnucleus/contracts": "0.1.*"
 	},
 	"autoload": {
 		"psr-4": {
