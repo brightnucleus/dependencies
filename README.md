@@ -6,10 +6,10 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/grade/1f3ad4eb15584dfba0408c9de094035f)](https://www.codacy.com/app/BrightNucleus/dependencies)
 [![Code Climate](https://codeclimate.com/github/brightnucleus/dependencies/badges/gpa.svg)](https://codeclimate.com/github/brightnucleus/dependencies)
 
-[![Latest Stable Version](https://poser.pugx.org/brightnucleus/shortcode/v/stable)](https://packagist.org/packages/brightnucleus/shortcode)
-[![Total Downloads](https://poser.pugx.org/brightnucleus/shortcode/downloads)](https://packagist.org/packages/brightnucleus/shortcode)
-[![Latest Unstable Version](https://poser.pugx.org/brightnucleus/shortcode/v/unstable)](https://packagist.org/packages/brightnucleus/shortcode)
-[![License](https://poser.pugx.org/brightnucleus/shortcode/license)](https://packagist.org/packages/brightnucleus/shortcode)
+[![Latest Stable Version](https://poser.pugx.org/brightnucleus/dependencies/v/stable)](https://packagist.org/packages/brightnucleus/dependencies)
+[![Total Downloads](https://poser.pugx.org/brightnucleus/dependencies/downloads)](https://packagist.org/packages/brightnucleus/dependencies)
+[![Latest Unstable Version](https://poser.pugx.org/brightnucleus/dependencies/v/unstable)](https://packagist.org/packages/brightnucleus/dependencies)
+[![License](https://poser.pugx.org/brightnucleus/dependencies/license)](https://packagist.org/packages/brightnucleus/dependencies)
 
 This is a WordPress dependencies component that lets you define dependencies through a config file, which will then get registered and enqueued automatically.
 
