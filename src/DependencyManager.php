@@ -134,9 +134,9 @@ class DependencyManager implements DependencyManagerInterface {
 	 */
 	protected function init_dependencies() {
 		array_walk( $this->handlers,
-			function ( $handler, $dependency_type ) use ( $config ) {
-				if ( ! empty( $config[ $dependency_type ] ) ) {
-					$this->dependencies[ $dependency_type ] = $config[ $dependency_type ];
+			function ( $handler, $dependency_type ) {
+				if ( $this->hasConfigKey( $dependency_type ) ) {
+					$this->dependencies[ $dependency_type ] = $this->getConfigKey( $dependency_type );
 				}
 			} );
 	}
