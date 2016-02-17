@@ -24,7 +24,7 @@ use BrightNucleus\Exception\RuntimeException;
  * @package BrightNucleus\Dependency
  * @author  Alain Schlesser <alain.schlesser@gmail.com>
  */
-class DependencyManager {
+class DependencyManager implements DependencyManagerInterface {
 
 	use ConfigTrait;
 
@@ -181,7 +181,7 @@ class DependencyManager {
 	 * @param mixed  $context         Optional. The context to pass to the
 	 *                                dependencies.
 	 */
-	public function enqueue_dependency_type( $dependencies, $dependency_type, $context = null ) {
+	protected function enqueue_dependency_type( $dependencies, $dependency_type, $context = null ) {
 		$context['dependency_type'] = $dependency_type;
 		array_walk( $dependencies, [ $this, 'enqueue_dependency' ], $context );
 	}
@@ -196,7 +196,7 @@ class DependencyManager {
 	 * @param mixed  $context         Optional. The context to pass to the
 	 *                                dependencies.
 	 */
-	public function register_dependency_type( $dependencies, $dependency_type, $context = null ) {
+	protected function register_dependency_type( $dependencies, $dependency_type, $context = null ) {
 		$context['dependency_type'] = $dependency_type;
 		array_walk( $dependencies, [ $this, 'register_dependency' ], $context );
 	}
@@ -212,7 +212,7 @@ class DependencyManager {
 	 *                               Contains the type of the dependency at key
 	 *                               'dependency_type'.
 	 */
-	public function register_dependency( $dependency, $dependency_key, $context ) {
+	protected function register_dependency( $dependency, $dependency_key, $context ) {
 		/** @var \BrightNucleus\Contract\Registerable $handler */
 		$handler = new $this->handlers[$context['dependency_type']];
 		$handler->register( $dependency );
@@ -235,7 +235,7 @@ class DependencyManager {
 	 *                          Contains the type of the dependency at key
 	 *                          'dependency_type'.
 	 */
-	public function localize( $dependency, $context ) {
+	protected function localize( $dependency, $context ) {
 		$localize = $dependency['localize'];
 		$data     = $localize['data'];
 		if ( is_callable( $data ) ) {
@@ -255,7 +255,7 @@ class DependencyManager {
 	 *                               Contains the type of the dependency at key
 	 *                               'dependency_type'.
 	 */
-	public function enqueue_dependency( $dependency, $dependency_key, $context ) {
+	protected function enqueue_dependency( $dependency, $dependency_key, $context ) {
 		if ( ! $this->is_needed( $dependency, $context ) ) {
 			return;
 		}
