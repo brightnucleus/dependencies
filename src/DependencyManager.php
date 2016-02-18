@@ -31,8 +31,8 @@ class DependencyManager implements DependencyManagerInterface {
 	/*
 	 * Default dependency handler implementations.
 	 */
-	const DEFAULT_SCRIPT_HANDLER = '\BrightNucleus\Dependency\Script';
-	const DEFAULT_STYLE_HANDLER  = '\BrightNucleus\Dependency\Style';
+	const DEFAULT_SCRIPT_HANDLER = '\BrightNucleus\Dependency\ScriptHandler';
+	const DEFAULT_STYLE_HANDLER  = '\BrightNucleus\Dependency\StyleHandler';
 
 	/*
 	 * Names of the configuration keys.
@@ -103,7 +103,7 @@ class DependencyManager implements DependencyManagerInterface {
 				? $this->getConfigKey( self::KEY_HANDLERS, $dependency )
 				: $this->get_default_handler( $dependency );
 			if ( $handler ) {
-				$this->handlers[] = $handler;
+				$this->handlers[ $dependency ] = $handler;
 			}
 		}
 	}
@@ -254,7 +254,7 @@ class DependencyManager implements DependencyManagerInterface {
 			return;
 		}
 		/** @var \BrightNucleus\Contract\Enqueueable $handler */
-		$handler = new $this->handlers[$dependency_type];
+		$handler = new $this->handlers[$context['dependency_type']];
 		$handler->enqueue( $dependency );
 	}
 
