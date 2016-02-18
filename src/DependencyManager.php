@@ -149,8 +149,24 @@ class DependencyManager implements DependencyManagerInterface {
 	 * @param mixed $context Optional. The context to pass to the dependencies.
 	 */
 	public function register( $context = null ) {
+		$context = $this->validate_context( $context );
 		array_walk( $this->dependencies,
 			[ $this, 'register_dependency_type' ], $context );
+	}
+
+	/**
+	 * Validate the context to make sure it is an array.
+	 *
+	 * @since 0.2.1
+	 *
+	 * @param mixed $context The context as passed in by WordPress.
+	 * @return array Validated context.
+	 */
+	protected function validate_context( $context ) {
+		if ( is_string( $context ) ) {
+			return [ 'wp_context' => $context ];
+		}
+		return (array) $context;
 	}
 
 	/**
@@ -161,6 +177,7 @@ class DependencyManager implements DependencyManagerInterface {
 	 * @param mixed $context Optional. The context to pass to the dependencies.
 	 */
 	public function enqueue( $context = null ) {
+		$context = $this->validate_context( $context );
 		array_walk( $this->dependencies,
 			[ $this, 'enqueue_dependency_type' ], $context );
 	}
@@ -202,11 +219,12 @@ class DependencyManager implements DependencyManagerInterface {
 	 *
 	 * @param array  $dependency     Configuration data of the dependency.
 	 * @param string $dependency_key Config key of the dependency.
-	 * @param mixed  $context        Context to pass to the dependencies.
-	 *                               Contains the type of the dependency at key
+	 * @param mixed  $context        Optional. Context to pass to the
+	 *                               dependencies. Contains the type of the
+	 *                               dependency at key
 	 *                               'dependency_type'.
 	 */
-	protected function register_dependency( $dependency, $dependency_key, $context ) {
+	protected function register_dependency( $dependency, $dependency_key, $context = null ) {
 		/** @var \BrightNucleus\Contract\Registerable $handler */
 		$handler = new $this->handlers[$context['dependency_type']];
 		$handler->register( $dependency );
@@ -245,11 +263,12 @@ class DependencyManager implements DependencyManagerInterface {
 	 *
 	 * @param array  $dependency     Configuration data of the dependency.
 	 * @param string $dependency_key Config key of the dependency.
-	 * @param mixed  $context        Context to pass to the dependencies.
-	 *                               Contains the type of the dependency at key
+	 * @param mixed  $context        Optional. Context to pass to the
+	 *                               dependencies. Contains the type of the
+	 *                               dependency at key
 	 *                               'dependency_type'.
 	 */
-	protected function enqueue_dependency( $dependency, $dependency_key, $context ) {
+	protected function enqueue_dependency( $dependency, $dependency_key, $context = null ) {
 		if ( ! $this->is_needed( $dependency, $context ) ) {
 			return;
 		}
