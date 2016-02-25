@@ -382,4 +382,19 @@ class DependencyManager implements DependencyManagerInterface {
 
 		$this->maybe_localize( $dependency, $context );
 	}
+
+	/**
+	 * Get the priority of a dependency.
+	 *
+	 * @since 0.2.2
+	 *
+	 * @param array $dependency Configuration data of the dependency.
+	 * @return int Priority to use.
+	 */
+	protected function get_priority( $dependency ) {
+		if ( array_key_exists( 'priority', $dependency ) ) {
+			return intval( $dependency['priority'] );
+		}
+		return 10;
+	}
 }
