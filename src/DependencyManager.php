@@ -186,36 +186,41 @@ class DependencyManager implements DependencyManagerInterface {
 	 *
 	 * @since 0.1.0
 	 *
-	 * @param mixed  $context Optional. The context to pass to the
+	 * @param mixed $context  Optional. The context to pass to the
 	 *                        dependencies.
-	 * @param string $handle  Optional. The dependency handle to enqueue. If
-	 *                        this is not null, only the single matching
-	 *                        dependency is enqueued.
-	 * @return void|bool If a handle was passed in, returns whether the handle
-	 *                        was found or not, otherwise returns void.
 	 */
-	public function enqueue( $context = null, $handle = null ) {
+	public function enqueue( $context = null ) {
 		$context = $this->validate_context( $context );
-
-		if ( $handle ) {
-			list( $dependency_key, $dependency ) = $this->get_dependency_array( $handle );
-			if ( $dependency ) {
-
-				$this->enqueue_dependency(
-					$dependency,
-					$dependency_key,
-					$context
-				);
-
-				$this->maybe_localize( $dependency, $context );
-
-				return true;
-			}
-			return false;
-		}
 
 		array_walk( $this->dependencies,
 			[ $this, 'enqueue_dependency_type' ], $context );
+	}
+
+	/**
+	 * Enqueue a single dependency retrieved by its handle.
+	 *
+	 * @since 0.2.2
+	 *
+	 * @param string $handle  The dependency handle to enqueue.
+	 * @param mixed  $context Optional. The context to pass to the
+	 *                        dependencies.
+	 * @return bool Returns whether the handle was found or not.
+	 */
+	public function enqueue_handle( $handle, $context = null ) {
+		list( $dependency_key, $dependency ) = $this->get_dependency_array( $handle );
+		if ( $dependency ) {
+
+			$this->enqueue_dependency(
+				$dependency,
+				$dependency_key,
+				$context
+			);
+
+			$this->maybe_localize( $dependency, $context );
+
+			return true;
+		}
+		return false;
 	}
 
 	/**
