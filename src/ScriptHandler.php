@@ -41,4 +41,16 @@ class ScriptHandler extends AbstractDependencyHandler {
 	protected function get_enqueue_function() {
 		return 'wp_enqueue_script';
 	}
+
+	/**
+	 * Check whether a specific handle has been registered.
+	 *
+	 * @since 0.2.3
+	 *
+	 * @param string $handle The handle to check
+	 * @return bool Whether it is registered or not.
+	 */
+	protected function is_registered( $handle ) {
+		return \wp_script_is( $handle );
+	}
 }

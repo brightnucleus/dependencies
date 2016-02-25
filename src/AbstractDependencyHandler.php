@@ -70,4 +70,29 @@ abstract class AbstractDependencyHandler implements DependencyHandlerInterface {
 	 * @return string Function name.
 	 */
 	abstract protected function get_enqueue_function();
+
+	/**
+	 * Maybe enqueue a dependency that has been registered outside of the
+	 * Dependency Manager.
+	 *
+	 * @since 0.2.3
+	 *
+	 * @param string $handle Handle of the dependency to enqueue.
+	 */
+	public function maybe_enqueue( $handle ) {
+		if ( $this->is_registered( $handle ) ) {
+			$enqueue = $this->get_enqueue_function();
+			$enqueue( $handle );
+		}
+	}
+
+	/**
+	 * Check whether a specific handle has been registered.
+	 *
+	 * @since 0.2.3
+	 *
+	 * @param string $handle The handle to check
+	 * @return bool Whether it is registered or not.
+	 */
+	abstract protected function is_registered( $handle );
 }

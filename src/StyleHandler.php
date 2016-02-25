@@ -32,6 +32,18 @@ class StyleHandler extends AbstractDependencyHandler {
 	}
 
 	/**
+	 * Check whether a specific handle has been registered.
+	 *
+	 * @since 0.2.3
+	 *
+	 * @param string $handle The handle to check
+	 * @return bool Whether it is registered or not.
+	 */
+	protected function is_registered( $handle ) {
+		return \wp_style_is( $handle );
+	}
+
+	/**
 	 * Get the name of the function that is used for enqueueing the dependency.
 	 *
 	 * @since 0.1.0
