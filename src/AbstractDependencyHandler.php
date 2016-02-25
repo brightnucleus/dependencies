@@ -78,12 +78,15 @@ abstract class AbstractDependencyHandler implements DependencyHandlerInterface {
 	 * @since 0.2.3
 	 *
 	 * @param string $handle Handle of the dependency to enqueue.
+	 * @return bool Whether the handle was found or not.
 	 */
 	public function maybe_enqueue( $handle ) {
 		if ( $this->is_registered( $handle ) ) {
 			$enqueue = $this->get_enqueue_function();
 			$enqueue( $handle );
+			return true;
 		}
+		return false;
 	}
 
 	/**
