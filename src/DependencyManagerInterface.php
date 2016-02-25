@@ -24,4 +24,15 @@ use BrightNucleus\Contract\Registerable;
  */
 interface DependencyManagerInterface extends Registerable, Enqueueable {
 
+	/**
+	 * Enqueue a single dependency retrieved by its handle.
+	 *
+	 * @since 0.2.2
+	 *
+	 * @param string $handle  The dependency handle to enqueue.
+	 * @param mixed  $context Optional. The context to pass to the
+	 *                        dependencies.
+	 * @return bool Returns whether the handle was found or not.
+	 */
+	public function enqueue_handle( $handle, $context = null );
 }
