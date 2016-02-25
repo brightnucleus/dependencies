@@ -60,18 +60,30 @@ class DependencyManager implements DependencyManagerInterface {
 	protected $handlers = [ ];
 
 	/**
+	 * Whether to enqueue immediately upon registration.
+	 *
+	 * @since 0.2.2
+	 *
+	 * @var bool
+	 */
+	protected $enqueue_immediately;
+
+	/**
 	 * Instantiate DependencyManager object.
 	 *
 	 * @since 0.1.0
 	 *
-	 * @param ConfigInterface $config         ConfigInterface object that
-	 *                                        contains dependency settings.
+	 * @param ConfigInterface $config   ConfigInterface object that contains
+	 *                                  dependency settings.
+	 * @param bool            $enqueue  Optional. Whether to enqueue
+	 *                                  immediately. Defaults to true.
 	 * @throws RuntimeException If the config could not be processed.
 	 * @throws InvalidArgumentException If no dependency handlers were
-	 *                                        specified.
+	 *                                  specified.
 	 */
-	public function __construct( ConfigInterface $config ) {
+	public function __construct( ConfigInterface $config, $enqueue = true ) {
 		$this->processConfig( $config );
+		$this->enqueue_immediately = $enqueue;
 		$this->init_handlers();
 		$this->init_dependencies();
 	}
@@ -174,12 +186,124 @@ class DependencyManager implements DependencyManagerInterface {
 	 *
 	 * @since 0.1.0
 	 *
-	 * @param mixed $context Optional. The context to pass to the dependencies.
+	 * @param mixed  $context Optional. The context to pass to the
+	 *                        dependencies.
+	 * @param string $handle  Optional. The dependency handle to enqueue. If
+	 *                        this is not null, only the single matching
+	 *                        dependency is enqueued.
+	 * @return void|bool If a handle was passed in, returns whether the handle
+	 *                        was found or not, otherwise returns void.
 	 */
-	public function enqueue( $context = null ) {
+	public function enqueue( $context = null, $handle = null ) {
 		$context = $this->validate_context( $context );
+
+		if ( $handle ) {
+			list( $dependency_key, $dependency ) = $this->get_dependency_array( $handle );
+			if ( $dependency ) {
+
+				$this->enqueue_dependency(
+					$dependency,
+					$dependency_key,
+					$context
+				);
+
+				$this->maybe_localize( $dependency, $context );
+
+				return true;
+			}
+			return false;
+		}
+
 		array_walk( $this->dependencies,
 			[ $this, 'enqueue_dependency_type' ], $context );
+	}
+
+	/**
+	 * Get the matching dependency for a given handle.
+	 *
+	 * @since 0.2.2
+	 *
+	 * @param string $handle The dependency handle to search for.
+	 * @return array Array containing the dependency key as well as the
+	 *                       dependency array itself.
+	 */
+	protected function get_dependency_array( $handle ) {
+		foreach ( $this->dependencies as $dependency_type ) {
+			$dependency_key = array_search( $handle, $dependency_type, true );
+			if ( $dependency_key ) {
+				return [ $dependency_key, $dependency_type[ $dependency_key ] ];
+			}
+		}
+		// Handle not found, return an empty array.
+		return [ '', null ];
+	}
+
+	/**
+	 * Enqueue a single dependency.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @param array  $dependency     Configuration data of the dependency.
+	 * @param string $dependency_key Config key of the dependency.
+	 * @param mixed  $context        Optional. Context to pass to the
+	 *                               dependencies. Contains the type of the
+	 *                               dependency at key
+	 *                               'dependency_type'.
+	 */
+	protected function enqueue_dependency( $dependency, $dependency_key, $context = null ) {
+		if ( ! $this->is_needed( $dependency, $context ) ) {
+			return;
+		}
+		/** @var \BrightNucleus\Contract\Enqueueable $handler */
+		$handler = new $this->handlers[$context['dependency_type']];
+		$handler->enqueue( $dependency );
+	}
+
+	/**
+	 * Check whether a specific dependency is needed.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @param array $dependency Configuration of the dependency to check.
+	 * @param mixed $context    Context to pass to the dependencies.
+	 *                          Contains the type of the dependency at key
+	 *                          'dependency_type'.
+	 * @return bool Whether it is needed or not.
+	 */
+	protected function is_needed( $dependency, $context ) {
+		$is_needed = array_key_exists( 'is_needed', $dependency )
+			? $dependency['is_needed']
+			: null;
+
+		if ( null === $is_needed ) {
+			return true;
+		}
+
+		return is_callable( $is_needed ) && $is_needed( $context );
+	}
+
+	/**
+	 * Localize the script of a given dependency.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @param array $dependency The dependency to localize the script of.
+	 * @param mixed $context    Contextual data to pass to the callback.
+	 *                          Contains the type of the dependency at key
+	 *                          'dependency_type'.
+	 */
+	protected function maybe_localize( $dependency, $context ) {
+		if ( ! array_key_exists( 'localize', $dependency ) ) {
+			return;
+		}
+
+		$localize = $dependency['localize'];
+		$data     = $localize['data'];
+		if ( is_callable( $data ) ) {
+			$data = $data( $context );
+		}
+
+		\wp_localize_script( $dependency['handle'], $localize['name'], $data );
 	}
 
 	/**
@@ -228,75 +352,29 @@ class DependencyManager implements DependencyManagerInterface {
 		/** @var \BrightNucleus\Contract\Registerable $handler */
 		$handler = new $this->handlers[$context['dependency_type']];
 		$handler->register( $dependency );
-		\add_action( 'wp_enqueue_scripts',
-			[ $this, 'enqueue' ] );
-		\add_action( 'admin_enqueue_scripts',
-			[ $this, 'enqueue' ] );
-		if ( array_key_exists( 'localize', $dependency ) ) {
-			$this->localize( $dependency, $context );
+
+		if ( $this->enqueue_immediately ) {
+			$this->register_enqueue_hooks( $dependency, $context );
 		}
 	}
 
 	/**
-	 * Localize the script of a given dependency.
+	 * Register the enqueueing to WordPress hooks.
 	 *
-	 * @since 0.1.0
+	 * @since 0.2.2
 	 *
-	 * @param array $dependency The dependency to localize the script of.
-	 * @param mixed $context    Contextual data to pass to the callback.
+	 * @param array $dependency Configuration data of the dependency.
+	 * @param mixed $context    Optional. Context to pass to the dependencies.
 	 *                          Contains the type of the dependency at key
 	 *                          'dependency_type'.
 	 */
-	protected function localize( $dependency, $context ) {
-		$localize = $dependency['localize'];
-		$data     = $localize['data'];
-		if ( is_callable( $data ) ) {
-			$data = $data( $context );
-		}
-		\wp_localize_script( $dependency['handle'], $localize['name'], $data );
-	}
+	protected function register_enqueue_hooks( $dependency, $context = null ) {
+		$priority = $this->get_priority( $dependency );
 
-	/**
-	 * Enqueue a single dependency.
-	 *
-	 * @since 0.1.0
-	 *
-	 * @param array  $dependency     Configuration data of the dependency.
-	 * @param string $dependency_key Config key of the dependency.
-	 * @param mixed  $context        Optional. Context to pass to the
-	 *                               dependencies. Contains the type of the
-	 *                               dependency at key
-	 *                               'dependency_type'.
-	 */
-	protected function enqueue_dependency( $dependency, $dependency_key, $context = null ) {
-		if ( ! $this->is_needed( $dependency, $context ) ) {
-			return;
-		}
-		/** @var \BrightNucleus\Contract\Enqueueable $handler */
-		$handler = new $this->handlers[$context['dependency_type']];
-		$handler->enqueue( $dependency );
-	}
-
-	/**
-	 * Check whether a specific dependency is needed.
-	 *
-	 * @since 0.1.0
-	 *
-	 * @param array $dependency Configuration of the dependency to check.
-	 * @param mixed $context    Context to pass to the dependencies.
-	 *                          Contains the type of the dependency at key
-	 *                          'dependency_type'.
-	 * @return bool Whether it is needed or not.
-	 */
-	protected function is_needed( $dependency, $context ) {
-		$is_needed = array_key_exists( 'is_needed', $dependency )
-			? $dependency['is_needed']
-			: null;
-
-		if ( null === $is_needed ) {
-			return true;
+		foreach ( [ 'wp_enqueue_scripts', 'admin_enqueue_scripts' ] as $hook ) {
+			\add_action( $hook, [ $this, 'enqueue' ], $priority, 1 );
 		}
 
-		return is_callable( $is_needed ) && $is_needed( $context );
+		$this->maybe_localize( $dependency, $context );
 	}
 }
