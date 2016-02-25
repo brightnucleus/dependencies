@@ -55,7 +55,7 @@ class DependencyManager implements DependencyManagerInterface {
 	 *
 	 * @since 0.1.0
 	 *
-	 * @var array
+	 * @var DependencyHandlerInterface[]
 	 */
 	protected $handlers = [ ];
 
@@ -115,7 +115,7 @@ class DependencyManager implements DependencyManagerInterface {
 				? $this->getConfigKey( self::KEY_HANDLERS, $dependency )
 				: $this->get_default_handler( $dependency );
 			if ( $handler ) {
-				$this->handlers[ $dependency ] = $handler;
+				$this->handlers[ $dependency ] = new $handler;
 			}
 		}
 	}
@@ -220,12 +220,14 @@ class DependencyManager implements DependencyManagerInterface {
 	 *
 	 * @since 0.2.2
 	 *
-	 * @param string $handle  The dependency handle to enqueue.
-	 * @param mixed  $context Optional. The context to pass to the
-	 *                        dependencies.
+	 * @param string $handle   The dependency handle to enqueue.
+	 * @param mixed  $context  Optional. The context to pass to the
+	 *                         dependencies.
+	 * @param bool   $fallback Whether to fall back to dependencies registered
+	 *                         outside of DependencyManager. Defaults to false.
 	 * @return bool Returns whether the handle was found or not.
 	 */
-	public function enqueue_handle( $handle, $context = null ) {
+	public function enqueue_handle( $handle, $context = null, $fallback = false ) {
 		list( $dependency_type, $dependency ) = $this->get_dependency_array( $handle );
 		$context['dependency_type'] = $dependency_type;
 		if ( $dependency ) {
@@ -239,6 +241,12 @@ class DependencyManager implements DependencyManagerInterface {
 			$this->maybe_localize( $dependency, $context );
 
 			return true;
+		}
+
+		if ( $fallback ) {
+			foreach ( $this->handlers as $handler ) {
+				$handler->maybe_enqueue( $handle );
+			}
 		}
 		return false;
 	}
@@ -278,8 +286,7 @@ class DependencyManager implements DependencyManagerInterface {
 		if ( ! $this->is_needed( $dependency, $context ) ) {
 			return;
 		}
-		/** @var \BrightNucleus\Contract\Enqueueable $handler */
-		$handler = new $this->handlers[$context['dependency_type']];
+		$handler = $this->handlers[ $context['dependency_type'] ];
 		$handler->enqueue( $dependency );
 	}
 
@@ -373,8 +380,7 @@ class DependencyManager implements DependencyManagerInterface {
 	 *                               'dependency_type'.
 	 */
 	protected function register_dependency( $dependency, $dependency_key, $context = null ) {
-		/** @var \BrightNucleus\Contract\Registerable $handler */
-		$handler = new $this->handlers[$context['dependency_type']];
+		$handler = $this->handlers[ $context['dependency_type'] ];
 		$handler->register( $dependency );
 
 		if ( $this->enqueue_immediately ) {

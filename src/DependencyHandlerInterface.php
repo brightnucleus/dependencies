@@ -23,4 +23,13 @@ use BrightNucleus\Contract\Registerable;
  */
 interface DependencyHandlerInterface extends Registerable, Enqueueable {
 
+	/**
+	 * Maybe enqueue a dependency that has been registered outside of the
+	 * Dependency Manager.
+	 *
+	 * @since 0.2.3
+	 *
+	 * @param string $handle Handle of the dependency to enqueue.
+	 */
+	public function maybe_enqueue( $handle );
 }
