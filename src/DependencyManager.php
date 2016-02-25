@@ -242,13 +242,13 @@ class DependencyManager implements DependencyManagerInterface {
 
 			return true;
 		}
+		if ( ! $fallback ) {
+			return false;
+		}
 
 		$result = false;
-
-		if ( $fallback ) {
-			foreach ( $this->handlers as $handler ) {
-				$result = $result || $handler->maybe_enqueue( $handle );
-			}
+		foreach ( $this->handlers as $handler ) {
+			$result = $result || $handler->maybe_enqueue( $handle );
 		}
 		return $result;
 	}
