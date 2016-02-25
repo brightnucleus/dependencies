@@ -148,9 +148,28 @@ class DependencyManager implements DependencyManagerInterface {
 		array_walk( $this->handlers,
 			function ( $handler, $dependency_type ) {
 				if ( $this->hasConfigKey( $dependency_type ) ) {
-					$this->dependencies[ $dependency_type ] = $this->getConfigKey( $dependency_type );
+					$this->dependencies[ $dependency_type ] = $this->init_dependency_type( $dependency_type );
 				}
 			} );
+	}
+
+	/**
+	 * Initialize the dependencies of a given type.
+	 *
+	 * @since 0.2.2
+	 *
+	 * @param string $type The type of dependency to initialize.
+	 * @return array Array of dependency configurations.
+	 */
+	protected function init_dependency_type( $type ) {
+		$array = [ ];
+		$data  = $this->getConfigKey( $type );
+		foreach ( $data as $dependency ) {
+			$handle           = array_key_exists( 'handle',
+				$dependency ) ? $dependency['handle'] : '';
+			$array[ $handle ] = $dependency;
+		}
+		return $array;
 	}
 
 	/**
@@ -207,12 +226,13 @@ class DependencyManager implements DependencyManagerInterface {
 	 * @return bool Returns whether the handle was found or not.
 	 */
 	public function enqueue_handle( $handle, $context = null ) {
-		list( $dependency_key, $dependency ) = $this->get_dependency_array( $handle );
+		list( $dependency_type, $dependency ) = $this->get_dependency_array( $handle );
+		$context['dependency_type'] = $dependency_type;
 		if ( $dependency ) {
 
 			$this->enqueue_dependency(
 				$dependency,
-				$dependency_key,
+				$handle,
 				$context
 			);
 
@@ -233,10 +253,9 @@ class DependencyManager implements DependencyManagerInterface {
 	 *                       dependency array itself.
 	 */
 	protected function get_dependency_array( $handle ) {
-		foreach ( $this->dependencies as $dependency_type ) {
-			$dependency_key = array_search( $handle, $dependency_type, true );
-			if ( $dependency_key ) {
-				return [ $dependency_key, $dependency_type[ $dependency_key ] ];
+		foreach ( $this->dependencies as $type => $dependencies ) {
+			if ( array_key_exists( $handle, $dependencies ) ) {
+				return [ $type, $dependencies[ $handle ] ];
 			}
 		}
 		// Handle not found, return an empty array.
