@@ -13,6 +13,18 @@
 
 This is a WordPress dependencies component that lets you define dependencies through a config file. The dependencies you define in this way will then get registered and enqueued automatically.
 
+## Table Of Contents
+
+* [Installation](#installation)
+* [Basic Usage](#basic-usage)
+	* [Configuration File](#configuration-file)
+	* [Initialization](#initialization)
+* [Advanced Features](#advanced-features)
+	* [Conditional Registration](#conditional-registration)
+	* [Custom Context Data](#custom-context-data)
+	* [Manual Enqueueing](#manual-enqueueing)
+* [Contributing](#contributing)
+
 ## Installation
 
 The best way to use this component is through Composer:
