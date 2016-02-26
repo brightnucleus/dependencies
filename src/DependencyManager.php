@@ -228,29 +228,40 @@ class DependencyManager implements DependencyManagerInterface {
 	 * @return bool Returns whether the handle was found or not.
 	 */
 	public function enqueue_handle( $handle, $context = null, $fallback = false ) {
+		if ( ! $this->enqueue_internal_handle( $handle, $context ) ) {
+			return $this->enqueue_fallback_handle( $handle );
+		}
+		return true;
+	}
+
+	/**
+	 * Enqueue a single dependency from the internal dependencies, retrieved by
+	 * its handle.
+	 *
+	 * @since 0.2.4
+	 *
+	 * @param string $handle   The dependency handle to enqueue.
+	 * @param mixed  $context  Optional. The context to pass to the
+	 *                         dependencies.
+	 * @return bool Returns whether the handle was found or not.
+	 */
+	protected function enqueue_internal_handle( $handle, $context = null ) {
 		list( $dependency_type, $dependency ) = $this->get_dependency_array( $handle );
 		$context['dependency_type'] = $dependency_type;
-		if ( $dependency ) {
 
-			$this->enqueue_dependency(
-				$dependency,
-				$handle,
-				$context
-			);
-
-			$this->maybe_localize( $dependency, $context );
-
-			return true;
-		}
-		if ( ! $fallback ) {
+		if ( ! $dependency ) {
 			return false;
 		}
 
-		$result = false;
-		foreach ( $this->handlers as $handler ) {
-			$result = $result || $handler->maybe_enqueue( $handle );
-		}
-		return $result;
+		$this->enqueue_dependency(
+			$dependency,
+			$handle,
+			$context
+		);
+
+		$this->maybe_localize( $dependency, $context );
+
+		return true;
 	}
 
 	/**
@@ -337,6 +348,23 @@ class DependencyManager implements DependencyManagerInterface {
 		}
 
 		\wp_localize_script( $dependency['handle'], $localize['name'], $data );
+	}
+
+	/**
+	 * Enqueue a single dependency from the WP-registered dependencies,
+	 * retrieved by its handle.
+	 *
+	 * @since 0.2.4
+	 *
+	 * @param string $handle The dependency handle to enqueue.
+	 * @return bool Returns whether the handle was found or not.
+	 */
+	protected function enqueue_fallback_handle( $handle ) {
+		$result = false;
+		foreach ( $this->handlers as $handler ) {
+			$result = $result || $handler->maybe_enqueue( $handle );
+		}
+		return $result;
 	}
 
 	/**
