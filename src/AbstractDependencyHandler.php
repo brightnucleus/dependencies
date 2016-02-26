@@ -36,7 +36,7 @@ abstract class AbstractDependencyHandler implements DependencyHandlerInterface {
 	 *                                  called.
 	 */
 	public function register( $args = null ) {
-		$this->invokeFunction( $this->get_register_function(), $args );
+		$this->invokeFunction( $this->get_register_function(), (array) $args );
 	}
 
 	/**
@@ -59,7 +59,7 @@ abstract class AbstractDependencyHandler implements DependencyHandlerInterface {
 	 *                                  called.
 	 */
 	public function enqueue( $args = null ) {
-		$this->invokeFunction( $this->get_enqueue_function(), $args );
+		$this->invokeFunction( $this->get_enqueue_function(), (array) $args );
 	}
 
 	/**
