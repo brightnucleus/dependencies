@@ -30,6 +30,7 @@ interface DependencyHandlerInterface extends Registerable, Enqueueable {
 	 * @since 0.2.3
 	 *
 	 * @param string $handle Handle of the dependency to enqueue.
+	 * @return bool Whether the handle was found and enqueued.
 	 */
 	public function maybe_enqueue( $handle );
 }
