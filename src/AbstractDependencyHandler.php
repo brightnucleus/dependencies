@@ -30,7 +30,7 @@ abstract class AbstractDependencyHandler implements DependencyHandlerInterface {
 	 *
 	 * @since 0.1.0
 	 *
-	 * @param array $args               Optional. Array of arguments that is
+	 * @param array|null $args          Optional. Array of arguments that is
 	 *                                  passed to the registration function.
 	 * @throws InvalidArgumentException If the register function could not be
 	 *                                  called.
@@ -53,7 +53,7 @@ abstract class AbstractDependencyHandler implements DependencyHandlerInterface {
 	 *
 	 * @since 0.1.0
 	 *
-	 * @param array $args               Optional. Array of arguments that is
+	 * @param array|null $args          Optional. Array of arguments that is
 	 *                                  passed to the enqueueing function.
 	 * @throws InvalidArgumentException If the register function could not be
 	 *                                  called.
