@@ -3,8 +3,14 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [0.2.4] - 2016-03-04
+### Added
+- Documentation improvements.
+
 ### Fixed
+- Refactored enqueue_handle().
+- Make sure we only pass an array to `invokeFunction()`.
 - Switch `beberlei/assert` to own fork until [#138](https://github.com/beberlei/assert/issues/138) has been fixed.
+- Several type-hinting tweaks.
 
 ## [0.2.3] - 2016-01-25
 ### Added
