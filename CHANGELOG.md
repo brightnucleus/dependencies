@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.2.7] - 2016-06-30
+### Changed
+- Remove `beberlei/assert`.
+- Update Composer dependencies.
+
 ## [0.2.6] - 2016-04-05
 ### Changed
 - Update Composer dependencies.
@@ -61,6 +66,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - Initial release to GitHub.
 
+[0.2.7]: https://github.com/brightnucleus/dependencies/compare/v0.2.6...v0.2.7
 [0.2.6]: https://github.com/brightnucleus/dependencies/compare/v0.2.5...v0.2.6
 [0.2.5]: https://github.com/brightnucleus/dependencies/compare/v0.2.4...v0.2.5
 [0.2.4]: https://github.com/brightnucleus/dependencies/compare/v0.2.3...v0.2.4

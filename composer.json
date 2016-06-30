@@ -9,7 +9,6 @@
 		}
 	],
 	"require": {
-		"beberlei/assert": ">=2.5",
 		"brightnucleus/config": ">=0.2",
 		"brightnucleus/exceptions": ">=0.2",
 		"brightnucleus/invoker": ">=0.1",
