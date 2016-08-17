@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.3.1] - 2016-08-17
+### Added
+- Add documentation about 'localize' key.
+
 ## [0.3.0] - 2016-08-17
 ### Added
 - Added LICENSE file.
@@ -78,6 +82,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - Initial release to GitHub.
 
+[0.3.1]: https://github.com/brightnucleus/dependencies/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/brightnucleus/dependencies/compare/v0.2.7...v0.3.0
 [0.2.7]: https://github.com/brightnucleus/dependencies/compare/v0.2.6...v0.2.7
 [0.2.6]: https://github.com/brightnucleus/dependencies/compare/v0.2.5...v0.2.6
