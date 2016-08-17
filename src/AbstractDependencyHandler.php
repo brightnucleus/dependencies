@@ -1,6 +1,6 @@
 <?php
 /**
- * AbstractDependencyHandler Class
+ * Bright Nucleus Dependency Component.
  *
  * @package   BrightNucleus\Dependency
  * @author    Alain Schlesser <alain.schlesser@gmail.com>
@@ -15,7 +15,7 @@ use BrightNucleus\Exception\InvalidArgumentException;
 use BrightNucleus\Invoker\FunctionInvokerTrait;
 
 /**
- * Abstract dependency.
+ * Abstract class AbstractDependencyHandler.
  *
  * @since   0.1.0
  *

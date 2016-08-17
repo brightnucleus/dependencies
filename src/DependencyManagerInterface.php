@@ -1,12 +1,12 @@
 <?php
 /**
- * DependencyManagerInterface Interface.
+ * Bright Nucleus Dependency Component.
  *
  * @package   BrightNucleus\Dependency
  * @author    Alain Schlesser <alain.schlesser@gmail.com>
  * @license   MIT
  * @link      http://www.brightnucleus.com/
- * @copyright 2015 Alain Schlesser, Bright NucleusInterface
+ * @copyright 2015-2016 Alain Schlesser, Bright Nucleus
  */
 
 namespace BrightNucleus\Dependency;
@@ -15,6 +15,8 @@ use BrightNucleus\Contract\Enqueueable;
 use BrightNucleus\Contract\Registerable;
 
 /**
+ * Interface DependencyManagerInterface.
+ *
  * Register and enqueue dependencies that are listed in the config file.
  *
  * @since   0.1.0

@@ -1,6 +1,6 @@
 <?php
 /**
- * DependencyHandlerInterface Interface.
+ * Bright Nucleus Dependency Component.
  *
  * @package   BrightNucleus\Dependency
  * @author    Alain Schlesser <alain.schlesser@gmail.com>
@@ -15,7 +15,7 @@ use BrightNucleus\Contract\Enqueueable;
 use BrightNucleus\Contract\Registerable;
 
 /**
- * Dependency interface.
+ * Interface DependencyHandlerInterface.
  *
  * @since   0.1.0
  *
