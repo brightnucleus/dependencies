@@ -2,12 +2,17 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Unreleased - 2016-08-17
+## [0.3.0] - 2016-08-17
 ### Added
 - Added LICENSE file.
 
 ### Changed
 - Change license to MIT.
+- Don't force WordPress functions into global namespace.
+
+### Removed
+- Removed git pre-commit script.
+- Removed unsued unit test preparations for now.
 
 ## [0.2.7] - 2016-06-30
 ### Changed
@@ -73,6 +78,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - Initial release to GitHub.
 
+[0.3.0]: https://github.com/brightnucleus/dependencies/compare/v0.2.7...v0.3.0
 [0.2.7]: https://github.com/brightnucleus/dependencies/compare/v0.2.6...v0.2.7
 [0.2.6]: https://github.com/brightnucleus/dependencies/compare/v0.2.5...v0.2.6
 [0.2.5]: https://github.com/brightnucleus/dependencies/compare/v0.2.4...v0.2.5
