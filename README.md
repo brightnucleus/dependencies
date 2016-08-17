@@ -124,7 +124,7 @@ class ExamplePlugin {
 	 * Launch the initialization process.
 	 */
 	public function run() {
-		add_action( 'init', [ $this, 'init_dependencies' ], 10 );
+		add_action( 'plugins_loaded', [ $this, 'init_dependencies' ] );
 	}
 
 	/**
@@ -135,7 +135,7 @@ class ExamplePlugin {
 		// Initialize dependencies.
 		$dependencies = new DependencyManager( $this->config );
 		// Register dependencies.
-		add_action( 'init', [ $dependencies, 'register' ], 20 );
+		add_action( 'init', [ $dependencies, 'register' ] );
 	}
 }
 ```
