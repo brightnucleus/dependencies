@@ -349,7 +349,7 @@ class DependencyManager implements DependencyManagerInterface {
 			$data = $data( $context );
 		}
 
-		\wp_localize_script( $dependency['handle'], $localize['name'], $data );
+		wp_localize_script( $dependency['handle'], $localize['name'], $data );
 	}
 
 	/**
@@ -434,7 +434,7 @@ class DependencyManager implements DependencyManagerInterface {
 		$priority = $this->get_priority( $dependency );
 
 		foreach ( [ 'wp_enqueue_scripts', 'admin_enqueue_scripts' ] as $hook ) {
-			\add_action( $hook, [ $this, 'enqueue' ], $priority, 1 );
+			add_action( $hook, [ $this, 'enqueue' ], $priority, 1 );
 		}
 
 		$this->maybe_localize( $dependency, $context );

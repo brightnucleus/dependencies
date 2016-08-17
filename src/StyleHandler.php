@@ -42,7 +42,7 @@ class StyleHandler extends AbstractDependencyHandler {
 	 * @return bool Whether it is registered or not.
 	 */
 	protected function is_registered( $handle ) {
-		return \wp_style_is( $handle, 'registered' );
+		return wp_style_is( $handle, 'registered' );
 	}
 
 	/**

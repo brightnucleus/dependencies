@@ -51,6 +51,6 @@ class ScriptHandler extends AbstractDependencyHandler {
 	 * @return bool Whether it is registered or not.
 	 */
 	protected function is_registered( $handle ) {
-		return \wp_script_is( $handle, 'registered' );
+		return wp_script_is( $handle, 'registered' );
 	}
 }
