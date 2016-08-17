@@ -4,7 +4,7 @@
  *
  * @package   BrightNucleus\Dependency
  * @author    Alain Schlesser <alain.schlesser@gmail.com>
- * @license   GPL-2.0+
+ * @license   MIT
  * @link      http://www.brightnucleus.com/
  * @copyright 2015 Alain Schlesser, Bright NucleusInterface
  */

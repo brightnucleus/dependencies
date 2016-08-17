@@ -24,6 +24,7 @@ This is a WordPress dependencies component that lets you define dependencies thr
 	* [Custom Context Data](#custom-context-data)
 	* [Manual Enqueueing](#manual-enqueueing)
 * [Contributing](#contributing)
+* [License](#license)
 
 ## Installation
 
@@ -243,3 +244,9 @@ Please use the provided `pre-commit` hook. To install it, run the following comm
 ```BASH
 ln -s ../../.pre-commit .git/hooks/pre-commit
 ```
+
+## License
+
+This code is released under the MIT license.
+
+For the full copyright and license information, please view the [`LICENSE`](LICENSE) file distributed with this source code.
