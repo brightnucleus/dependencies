@@ -81,7 +81,6 @@ abstract class AbstractDependencyHandler implements DependencyHandlerInterface {
 	 * @return bool Whether the handle was found or not.
 	 */
 	public function maybe_enqueue( $handle ) {
-		global $wp_scripts;
 		if ( $this->is_registered( $handle ) ) {
 			$enqueue = $this->get_enqueue_function();
 			$enqueue( $handle );
