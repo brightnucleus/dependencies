@@ -21,6 +21,7 @@ This is a WordPress dependencies component that lets you define dependencies thr
 	* [Initialization](#initialization)
 * [Advanced Features](#advanced-features)
 	* [Conditional Registration](#conditional-registration)
+	* [Localized Data](#localized-data)
 	* [Custom Context Data](#custom-context-data)
 	* [Manual Enqueueing](#manual-enqueueing)
 * [Contributing](#contributing)
@@ -41,12 +42,21 @@ composer require brightnucleus/dependencies
 To use the `DependencyManager`, you first need to create a config file ( see [`brightnucleus/config`](https://github.com/brightnucleus/config) ), in which you define your dependencies. At the root level of the config that is passed into the `DependencyManager`'s constructor, you'll have one key for each type of dependency, and a `handlers` key that defines the class that handles that specific type of dependency. As an example, here is the setup that the `DependencyManager` has out-of-the-box support for:
 ```PHP
 <?php
+
+// Configure all your styles and scripts here.
 $dependencies_config = [
 	'styles'   => [ <individual style dependencies go here> ],
 	'scripts'  => [ <individual script dependencies go here> ],
 	'handlers' => [
 		'scripts' => 'BrightNucleus\Dependency\ScriptHandler',
 		'styles'  => 'BrightNucleus\Dependency\StyleHandler',
+	],
+];
+
+// Pass the Config to the 'DependencyManager', with a vendor/package prefix.
+return 'BrightNucleus' => [
+	'Example' => [
+		'DependencyManager' => $dependencies_config,
 	],
 ];
 ```
@@ -133,7 +143,9 @@ class ExamplePlugin {
 	public function init_dependencies() {
 
 		// Initialize dependencies.
-		$dependencies = new DependencyManager( $this->config );
+		$dependencies = new DependencyManager(
+			$this->config->getSubConfig( 'DependencyManager' )
+		);
 		// Register dependencies.
 		add_action( 'init', [ $dependencies, 'register' ] );
 	}
@@ -162,6 +174,38 @@ $dependencies_config = [
 	],
 ];
 ```
+
+### Localized Data
+
+If you need to pass data from your PHP code to your JavaScript dependency, you can do this by adding a `'localize'` key to the script configuration.
+
+Example of passing dynamic PHP data to a JavaScript dependency:
+
+```PHP
+<?php
+$dependencies_config = [
+	'scripts' => [
+		[
+			'handle'    => 'bn-example-script-handle',
+			'src'       => BN_EXAMPLE_PLUGIN_DIR . 'js/bn-example-script.js',
+			'deps'      => [ 'jquery' ],
+			'ver'       => '1.2.1',
+			'in_footer' => true,
+			'localize'  => [
+				'name' => 'BNExampleData',
+				'data' => function( $context ) {
+					return [
+						'ajaxurl' => admin_url( 'admin-ajax.php' ),
+						'context' => $context,
+					];
+				},
+			],
+		],
+	],
+];
+```
+
+When your `bn-example-script.js` file executes, it will have access to a global `BNExampleData` object to retrieve its data from. So, for example, `console.log( BNExampleData.ajaxurl );` would print the AJAX URL for the current site to the console.
 
 ### Custom Context Data
 
