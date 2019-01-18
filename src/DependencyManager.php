@@ -262,6 +262,7 @@ class DependencyManager implements DependencyManagerInterface {
 		);
 
 		$this->maybe_localize( $dependency, $context );
+		$this->maybe_add_inline_script( $dependency, $context );
 
 		return true;
 	}
@@ -353,6 +354,30 @@ class DependencyManager implements DependencyManagerInterface {
 	}
 
 	/**
+	 * Add an inline script snippet to a given dependency.
+	 *
+	 * @since 0.1.0
+	 *
+	 * @param array $dependency The dependency to add the inline script to.
+	 * @param mixed $context    Contextual data to pass to the callback.
+	 *                          Contains the type of the dependency at key
+	 *                          'dependency_type'.
+	 */
+	protected function maybe_add_inline_script( $dependency, $context ) {
+		if ( ! array_key_exists( 'add_inline', $dependency ) ) {
+			return;
+		}
+
+		$inline_script = $dependency['add_inline'];
+
+		if ( is_callable( $inline_script ) ) {
+			$inline_script = $inline_script( $context );
+		}
+
+		wp_add_inline_script( $dependency['handle'], $inline_script );
+	}
+
+	/**
 	 * Enqueue a single dependency from the WP-registered dependencies,
 	 * retrieved by its handle.
 	 *
@@ -438,6 +463,7 @@ class DependencyManager implements DependencyManagerInterface {
 		}
 
 		$this->maybe_localize( $dependency, $context );
+		$this->maybe_add_inline_script( $dependency, $context );
 	}
 
 	/**

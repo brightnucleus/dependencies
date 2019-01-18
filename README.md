@@ -22,6 +22,7 @@ This is a WordPress dependencies component that lets you define dependencies thr
 * [Advanced Features](#advanced-features)
 	* [Conditional Registration](#conditional-registration)
 	* [Localized Data](#localized-data)
+	* [Inline Scripts](#inline-scripts)
 	* [Custom Context Data](#custom-context-data)
 	* [Manual Enqueueing](#manual-enqueueing)
 * [Contributing](#contributing)
@@ -206,6 +207,30 @@ $dependencies_config = [
 ```
 
 When your `bn-example-script.js` file executes, it will have access to a global `BNExampleData` object to retrieve its data from. So, for example, `console.log( BNExampleData.ajaxurl );` would print the AJAX URL for the current site to the console.
+
+### Inline Scripts
+
+If you need to add inline scripts to your JavaScript dependency, you can do this by adding a `'add_inline'` key to the script configuration.
+
+Example of adding an inline script to a JavaScript dependency:
+
+```PHP
+<?php
+$dependencies_config = [
+	'scripts' => [
+		[
+			'handle'     => 'bn-example-script-handle',
+			'src'        => BN_EXAMPLE_PLUGIN_DIR . 'js/bn-example-script.js',
+			'deps'       => [ 'jquery' ],
+			'ver'        => '1.2.1',
+			'in_footer'  => true,
+			'add_inline' => 'window.initialite_my_script();',
+		],
+	],
+];
+```
+
+When your `bn-example-script.js` file executes, it will immediately be followed by the inline script snippet you provided.
 
 ### Custom Context Data
 
