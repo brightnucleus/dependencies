@@ -90,12 +90,23 @@ abstract class AbstractDependencyHandler implements DependencyHandlerInterface {
 	}
 
 	/**
+	 * Check whether a specific handle has been enqueued.
+	 *
+	 * @since 0.3.3
+	 *
+	 * @param string $handle The handle to check
+	 * @return bool Whether it is enqueued or not.
+	 */
+	abstract public function is_enqueued( $handle );
+
+	/**
 	 * Check whether a specific handle has been registered.
 	 *
 	 * @since 0.2.3
+	 * @since 0.3.3 Publicly accessible.
 	 *
 	 * @param string $handle The handle to check
 	 * @return bool Whether it is registered or not.
 	 */
-	abstract protected function is_registered( $handle );
+	abstract public function is_registered( $handle );
 }
