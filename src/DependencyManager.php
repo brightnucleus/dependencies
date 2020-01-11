@@ -340,7 +340,9 @@ class DependencyManager implements DependencyManagerInterface {
 	 *                          'dependency_type'.
 	 */
 	protected function maybe_localize( $dependency, $context ) {
-		if ( ! array_key_exists( 'localize', $dependency ) ) {
+		static $already_localized = [];
+		if ( ! array_key_exists( 'localize', $dependency )
+		     || array_key_exists( $dependency['handle'], $already_localized ) ) {
 			return;
 		}
 
@@ -351,6 +353,7 @@ class DependencyManager implements DependencyManagerInterface {
 		}
 
 		wp_localize_script( $dependency['handle'], $localize['name'], $data );
+		$already_localized[ $dependency['handle'] ] = true;
 	}
 
 	/**
