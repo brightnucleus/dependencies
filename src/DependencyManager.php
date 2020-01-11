@@ -230,6 +230,11 @@ class DependencyManager implements DependencyManagerInterface {
 	 * @return bool Returns whether the handle was found or not.
 	 */
 	public function enqueue_handle( $handle, $context = null, $fallback = false ) {
+		$handler = $this->handlers[ $context['dependency_type'] ];
+		if ( $handler->is_enqueued( $handle ) ) {
+			return true;
+		}
+
 		if ( ! $this->enqueue_internal_handle( $handle, $context ) ) {
 			return $this->enqueue_fallback_handle( $handle );
 		}
@@ -299,10 +304,17 @@ class DependencyManager implements DependencyManagerInterface {
 	 *                               'dependency_type'.
 	 */
 	protected function enqueue_dependency( $dependency, $dependency_key, $context = null ) {
+		$handler = $this->handlers[ $context['dependency_type'] ];
+		$handle  = array_key_exists( 'handle', $dependency ) ? $dependency['handle'] : '';
+
+		if ( $handle && $handler->is_enqueued( $handle ) ) {
+			return;
+		}
+
 		if ( ! $this->is_needed( $dependency, $context ) ) {
 			return;
 		}
-		$handler = $this->handlers[ $context['dependency_type'] ];
+
 		$handler->enqueue( $dependency );
 	}
 

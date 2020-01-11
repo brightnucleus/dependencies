@@ -33,4 +33,24 @@ interface DependencyHandlerInterface extends Registerable, Enqueueable {
 	 * @return bool Whether the handle was found and enqueued.
 	 */
 	public function maybe_enqueue( $handle );
+
+	/**
+	 * Check whether a specific handle has been registered.
+	 *
+	 * @since 0.3.3
+	 *
+	 * @param string $handle The handle to check
+	 * @return bool Whether it is registered or not.
+	 */
+	public function is_registered( $handle );
+
+	/**
+	 * Check whether a specific handle has been enqueued.
+	 *
+	 * @since 0.3.3
+	 *
+	 * @param string $handle The handle to check
+	 * @return bool Whether it is enqueued or not.
+	 */
+	public function is_enqueued( $handle );
 }

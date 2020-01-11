@@ -46,11 +46,24 @@ class ScriptHandler extends AbstractDependencyHandler {
 	 * Check whether a specific handle has been registered.
 	 *
 	 * @since 0.2.3
+	 * @since 0.3.3 Publicly accessible.
 	 *
 	 * @param string $handle The handle to check
 	 * @return bool Whether it is registered or not.
 	 */
-	protected function is_registered( $handle ) {
+	public function is_registered( $handle ) {
 		return wp_script_is( $handle, 'registered' );
+	}
+
+	/**
+	 * Check whether a specific handle has been enqueued.
+	 *
+	 * @since 0.3.3
+	 *
+	 * @param string $handle The handle to check
+	 * @return bool Whether it is enqueued or not.
+	 */
+	public function is_enqueued( $handle ) {
+		return wp_script_is( $handle, 'enqueued' );
 	}
 }

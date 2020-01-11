@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.3.3] - 2020-01-11
+### Fixed
+- Only enqueue dependencies that haven't been enqueued yet.
+- Only localize scripts that haven't been localized yet.
+
 ## [0.3.2] - 2019-01-18
 ### Added
 - Add basic support for adding inline scripts.
@@ -86,6 +91,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - Initial release to GitHub.
 
+[0.3.3]: https://github.com/brightnucleus/dependencies/compare/v0.3.2...v0.3.3
 [0.3.2]: https://github.com/brightnucleus/dependencies/compare/v0.3.1...v0.3.2
 [0.3.1]: https://github.com/brightnucleus/dependencies/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/brightnucleus/dependencies/compare/v0.2.7...v0.3.0
