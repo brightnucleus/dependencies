@@ -59,6 +59,11 @@ abstract class AbstractDependencyHandler implements DependencyHandlerInterface {
 	 *                                  called.
 	 */
 	public function enqueue( $args = null ) {
+		if ( array_key_exists( 'handle', $args )
+		     && $this->is_enqueued( $args['handle'] ) ) {
+			return;
+		}
+
 		$this->invokeFunction( $this->get_enqueue_function(), (array) $args );
 	}
 
@@ -81,6 +86,10 @@ abstract class AbstractDependencyHandler implements DependencyHandlerInterface {
 	 * @return bool Whether the handle was found or not.
 	 */
 	public function maybe_enqueue( $handle ) {
+		if ( $this->is_enqueued( $handle ) ) {
+			return true;
+		}
+
 		if ( $this->is_registered( $handle ) ) {
 			$enqueue = $this->get_enqueue_function();
 			$enqueue( $handle );
