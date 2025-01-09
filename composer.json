@@ -9,16 +9,41 @@
 		}
 	],
 	"require": {
-		"brightnucleus/config": ">=0.2",
-		"brightnucleus/exceptions": ">=0.2",
-		"brightnucleus/invoker": ">=0.1",
-		"brightnucleus/contracts": ">=0.1"
+		"php": ">=8.0",
+		"brightnucleus/config": ">=0.5",
+		"brightnucleus/exceptions": ">=0.3",
+		"brightnucleus/invoker": ">=0.2",
+		"brightnucleus/contracts": ">=0.2"
 	},
 	"require-dev": {
+		"malukenho/docheader": "^1",
+		"yoast/phpunit-polyfills": "^3", 
+		"phpunit/phpunit": "^7.5 || ^8.5 || ^9.5 || ^10",
+		"squizlabs/php_codesniffer": "^3",
+		"php-parallel-lint/php-parallel-lint": "^1",
+		"wp-coding-standards/wpcs": "^3.0",
+		"dealerdirect/phpcodesniffer-composer-installer": "^1.0"
 	},
 	"autoload": {
 		"psr-4": {
 			"BrightNucleus\\Dependency\\": "src/"
+		}
+	},
+	"scripts": {
+		"check": [
+			"@cs-check",
+			"@test"
+		],
+		"upload-coverage": "vendor/bin/coveralls -v --coverage_clover clover.xml",
+		"cs-check": "vendor/bin/phpcs -ps --colors",
+		"cs-fix": "vendor/bin/phpcbf -ps --colors",
+		"test": "echo 'No tests yet.'",
+		"test-coverage": "echo 'No tests yet.'",
+		"license-check": "vendor/bin/docheader --ansi check src/"
+	},
+	"config": {
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true
 		}
 	}
 }

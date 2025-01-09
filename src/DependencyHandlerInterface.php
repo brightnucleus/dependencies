@@ -39,7 +39,7 @@ interface DependencyHandlerInterface extends Registerable, Enqueueable {
 	 *
 	 * @since 0.3.3
 	 *
-	 * @param string $handle The handle to check
+	 * @param string $handle The handle to check.
 	 * @return bool Whether it is registered or not.
 	 */
 	public function is_registered( $handle );
@@ -49,7 +49,7 @@ interface DependencyHandlerInterface extends Registerable, Enqueueable {
 	 *
 	 * @since 0.3.3
 	 *
-	 * @param string $handle The handle to check
+	 * @param string $handle The handle to check.
 	 * @return bool Whether it is enqueued or not.
 	 */
 	public function is_enqueued( $handle );

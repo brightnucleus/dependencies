@@ -50,7 +50,7 @@ class DependencyManager implements DependencyManagerInterface {
 	 *
 	 * @var array;
 	 */
-	protected $dependencies = [ ];
+	protected $dependencies = array();
 
 	/**
 	 * Hold the handlers.
@@ -59,7 +59,7 @@ class DependencyManager implements DependencyManagerInterface {
 	 *
 	 * @var DependencyHandlerInterface[]
 	 */
-	protected $handlers = [ ];
+	protected $handlers = array();
 
 	/**
 	 * Whether to enqueue immediately upon registration.
@@ -96,7 +96,7 @@ class DependencyManager implements DependencyManagerInterface {
 	 * @since 0.1.0
 	 */
 	protected function init_handlers() {
-		$keys = [ self::KEY_SCRIPTS, self::KEY_STYLES ];
+		$keys = array( self::KEY_SCRIPTS, self::KEY_STYLES );
 		foreach ( $keys as $key ) {
 			if ( $this->hasConfigKey( $key ) ) {
 				$this->add_handler( $key );
@@ -117,7 +117,7 @@ class DependencyManager implements DependencyManagerInterface {
 				? $this->getConfigKey( self::KEY_HANDLERS, $dependency )
 				: $this->get_default_handler( $dependency );
 			if ( $handler ) {
-				$this->handlers[ $dependency ] = new $handler;
+				$this->handlers[ $dependency ] = new $handler();
 			}
 		}
 	}
@@ -147,12 +147,14 @@ class DependencyManager implements DependencyManagerInterface {
 	 * @since 0.1.0
 	 */
 	protected function init_dependencies() {
-		array_walk( $this->handlers,
+		array_walk(
+			$this->handlers,
 			function ( $handler, $dependency_type ) {
 				if ( $this->hasConfigKey( $dependency_type ) ) {
 					$this->dependencies[ $dependency_type ] = $this->init_dependency_type( $dependency_type );
 				}
-			} );
+			}
+		);
 	}
 
 	/**
@@ -164,11 +166,13 @@ class DependencyManager implements DependencyManagerInterface {
 	 * @return array Array of dependency configurations.
 	 */
 	protected function init_dependency_type( $type ) {
-		$array = [ ];
+		$array = array();
 		$data  = $this->getConfigKey( $type );
 		foreach ( $data as $dependency ) {
-			$handle           = array_key_exists( 'handle',
-				$dependency ) ? $dependency['handle'] : '';
+			$handle           = array_key_exists(
+				'handle',
+				$dependency
+			) ? $dependency['handle'] : '';
 			$array[ $handle ] = $dependency;
 		}
 		return $array;
@@ -183,8 +187,11 @@ class DependencyManager implements DependencyManagerInterface {
 	 */
 	public function register( $context = null ) {
 		$context = $this->validate_context( $context );
-		array_walk( $this->dependencies,
-			[ $this, 'register_dependency_type' ], $context );
+		array_walk(
+			$this->dependencies,
+			array( $this, 'register_dependency_type' ),
+			$context
+		);
 	}
 
 	/**
@@ -197,7 +204,7 @@ class DependencyManager implements DependencyManagerInterface {
 	 */
 	protected function validate_context( $context ) {
 		if ( is_string( $context ) ) {
-			return [ 'wp_context' => $context ];
+			return array( 'wp_context' => $context );
 		}
 		return (array) $context;
 	}
@@ -213,8 +220,11 @@ class DependencyManager implements DependencyManagerInterface {
 	public function enqueue( $context = null ) {
 		$context = $this->validate_context( $context );
 
-		array_walk( $this->dependencies,
-			[ $this, 'enqueue_dependency_type' ], $context );
+		array_walk(
+			$this->dependencies,
+			array( $this, 'enqueue_dependency_type' ),
+			$context
+		);
 	}
 
 	/**
@@ -249,7 +259,7 @@ class DependencyManager implements DependencyManagerInterface {
 	 */
 	protected function enqueue_internal_handle( $handle, $context = null ) {
 		list( $dependency_type, $dependency ) = $this->get_dependency_array( $handle );
-		$context['dependency_type'] = $dependency_type;
+		$context['dependency_type']           = $dependency_type;
 
 		if ( ! $dependency ) {
 			return false;
@@ -286,11 +296,11 @@ class DependencyManager implements DependencyManagerInterface {
 	protected function get_dependency_array( $handle ) {
 		foreach ( $this->dependencies as $type => $dependencies ) {
 			if ( array_key_exists( $handle, $dependencies ) ) {
-				return [ $type, $dependencies[ $handle ] ];
+				return array( $type, $dependencies[ $handle ] );
 			}
 		}
 		// Handle not found, return an empty array.
-		return [ '', null ];
+		return array( '', null );
 	}
 
 	/**
@@ -354,9 +364,9 @@ class DependencyManager implements DependencyManagerInterface {
 	 *                          'dependency_type'.
 	 */
 	protected function maybe_localize( $dependency, $context ) {
-		static $already_localized = [];
+		static $already_localized = array();
 		if ( ! array_key_exists( 'localize', $dependency )
-		     || array_key_exists( $dependency['handle'], $already_localized ) ) {
+			|| array_key_exists( $dependency['handle'], $already_localized ) ) {
 			return;
 		}
 
@@ -366,7 +376,7 @@ class DependencyManager implements DependencyManagerInterface {
 			$data = $data( $context );
 		}
 
-		wp_localize_script( $dependency['handle'], $localize['name'], $data );
+		\wp_localize_script( $dependency['handle'], $localize['name'], $data );
 		$already_localized[ $dependency['handle'] ] = true;
 	}
 
@@ -391,7 +401,7 @@ class DependencyManager implements DependencyManagerInterface {
 			$inline_script = $inline_script( $context );
 		}
 
-		wp_add_inline_script( $dependency['handle'], $inline_script );
+		\wp_add_inline_script( $dependency['handle'], $inline_script );
 	}
 
 	/**
@@ -423,7 +433,7 @@ class DependencyManager implements DependencyManagerInterface {
 	 */
 	protected function enqueue_dependency_type( $dependencies, $dependency_type, $context = null ) {
 		$context['dependency_type'] = $dependency_type;
-		array_walk( $dependencies, [ $this, 'enqueue_dependency' ], $context );
+		array_walk( $dependencies, array( $this, 'enqueue_dependency' ), $context );
 	}
 
 	/**
@@ -438,7 +448,7 @@ class DependencyManager implements DependencyManagerInterface {
 	 */
 	protected function register_dependency_type( $dependencies, $dependency_type, $context = null ) {
 		$context['dependency_type'] = $dependency_type;
-		array_walk( $dependencies, [ $this, 'register_dependency' ], $context );
+		array_walk( $dependencies, array( $this, 'register_dependency' ), $context );
 	}
 
 	/**
@@ -475,8 +485,8 @@ class DependencyManager implements DependencyManagerInterface {
 	protected function register_enqueue_hooks( $dependency, $context = null ) {
 		$priority = $this->get_priority( $dependency );
 
-		foreach ( [ 'wp_enqueue_scripts', 'admin_enqueue_scripts' ] as $hook ) {
-			add_action( $hook, [ $this, 'enqueue' ], $priority, 1 );
+		foreach ( array( 'wp_enqueue_scripts', 'admin_enqueue_scripts' ) as $hook ) {
+			\add_action( $hook, array( $this, 'enqueue' ), $priority, 1 );
 		}
 
 		$this->maybe_localize( $dependency, $context );
